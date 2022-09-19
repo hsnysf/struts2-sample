@@ -83,16 +83,8 @@ function setMessage(element, message) {
 		$(element).closest(".mb-3").find(".invalid-feedback").html(message);
 	}
 	
-	if (message != null) {
-		
-		$(element).removeClass("is-valid");
-		$(element).addClass("is-invalid");
-
-	} else {
-		
-		$(element).removeClass("is-invalid");
-		$(element).addClass("is-valid");
-	}
+	$(element).toggleClass("is-valid", message == null);
+	$(element).toggleClass("is-invalid", message != null);
 	
 	return message;
 }
@@ -115,12 +107,7 @@ function isValidForm() {
 		}
 	});
 	
-	if(result){
-		$("#alert").hide();
-	}else{
-		
-		$("#alert").show();
-	}
+	$("#alert").toggle(!result);
 	
 	return result;
 }
