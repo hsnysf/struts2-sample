@@ -42,7 +42,7 @@
 				<s:property value="actionErrors[0]"/>
 			</div>
 			</s:if>
-			<div id="alert" class="alert alert-danger fw-bold text-center mt-3" role="alert">
+			<div id="alert" class="alert alert-danger fw-bold text-center mt-3" role="alert" style="display:none">
 			</div>
 	      	<tiles:insertAttribute name="page" />
 	      	<tiles:insertAttribute name="footer" />
