@@ -22,8 +22,8 @@ import employee.entity.Manager;
 @Action("manager")
 @Results({
 	@Result(name="toSuccessUpdateManagerActive", type = "redirect", 
-			location = "toSuccessUpdateManagerActive", params = {"manager.id", "%{manager.id}","manager.active", "%{manager.active}"}),
-	
+			location = "toSuccessUpdateManagerActive", 
+			params = {"manager.id", "%{manager.id}","manager.active", "%{manager.active}"}),
 	@Result(name = "toSuccessSaveManager", type = "redirect", location = "toSuccessSaveManager", params = {"id", "%{id}", "manager.id", "%{manager.id}"})
 })
 public class ManagerAction extends ActionSupport implements Preparable{
@@ -46,11 +46,6 @@ public class ManagerAction extends ActionSupport implements Preparable{
 	
 	@Override
 	public void validate() {
-		
-		if(manager != null) {
-			
-			id = manager.getId();
-		}
 		
 		if (StringUtils.isEmpty(parameters.get("managerSearch.active").getValue())) {
 
@@ -128,6 +123,8 @@ public class ManagerAction extends ActionSupport implements Preparable{
 	
 	@Action("saveManager")
 	public String saveManager() throws Exception {
+		
+		id = manager.getId();
 		
 		//Integer id = manager.getId();
 		
