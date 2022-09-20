@@ -54,7 +54,6 @@ public class ManagerDao {
 			predicates.add(builder.equal(manager.get(Manager_.name), managerSearch.getName()));
 		}
 		if(managerSearch != null && isNotEmpty(managerSearch.getAge())){
-			System.out.println("test");
 			predicates.add(builder.equal(manager.get(Manager_.age), managerSearch.getAge()));
 		}
 		if(managerSearch != null && isNotEmpty(managerSearch.getEmail())){

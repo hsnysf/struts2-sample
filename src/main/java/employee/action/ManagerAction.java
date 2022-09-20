@@ -3,7 +3,7 @@ package employee.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.InitialContext;
+import javax.ejb.EJB;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -12,12 +12,11 @@ import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
 
 import employee.bean.ManagerBean;
 import employee.entity.Address;
 import employee.entity.Manager;
+import employee.exception.BusinessException;
 
 @Action("manager")
 @Results({
@@ -26,22 +25,26 @@ import employee.entity.Manager;
 			params = {"manager.id", "%{manager.id}","manager.active", "%{manager.active}"}),
 	@Result(name = "toSuccessSaveManager", type = "redirect", location = "toSuccessSaveManager", params = {"id", "%{id}", "manager.id", "%{manager.id}"})
 })
-public class ManagerAction extends ActionSupport implements Preparable{
+public class ManagerAction extends CommonAction{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String page;
 	private Manager managerSearch = new Manager();
 	private Manager manager = new Manager();
 	private List<Manager> managers = new ArrayList<Manager>();
 	private HttpParameters parameters = ActionContext.getContext().getParameters();
+	
+	@EJB
 	private ManagerBean managerBean;
+	
 	private Integer id;
 	
 	@Override
 	public void prepare() throws Exception {
 		
-		managerBean = (ManagerBean) new InitialContext().lookup("java:global/struts2-sample/ManagerBean");
+		System.out.println("managerBean :: " + managerBean);
+		
+		//managerBean = (ManagerBean) new InitialContext().lookup("java:global/struts2-sample/ManagerBean");
 	}
 	
 	@Override
@@ -65,13 +68,13 @@ public class ManagerAction extends ActionSupport implements Preparable{
 	@Action("/")
 	public String searchManagers() throws Exception {
 		
+		String result = toPage("/managers-list.jsp");
+		
 		managers = managerBean.searchManagers(managerSearch);
 		
 		managerSearch = managerBean.getManagerCount(managerSearch);
 		
-		page = "/managers-list.jsp";
-		
-		return "layout";
+		return result;
 	}
 	
 	@Action("updateManagerActive")
@@ -104,25 +107,30 @@ public class ManagerAction extends ActionSupport implements Preparable{
 	@Action("toAddManager")
 	public String toAddManager() throws Exception {
 		
+		String result = toPage("/save-manager.jsp");
+		
 		manager = new Manager();
 		
-		page = "/save-manager.jsp";
-		
-		return "layout";
+		return result;
 	}
 	
 	@Action("toEditManager")
 	public String toEditManager() throws Exception {
 		
+		String result = toPage("/save-manager.jsp");
+		
 		manager = managerBean.getManager(manager);
 		
-		page = "/save-manager.jsp";
-		
-		return "layout";
+		return result;
 	}
 	
 	@Action("saveManager")
 	public String saveManager() throws Exception {
+		
+		System.out.println(5/0);
+		//if(true) {
+		//	throw new BusinessException("Cannot save this manager due to some requirements");
+		//}
 		
 		id = manager.getId();
 		
@@ -150,14 +158,6 @@ public class ManagerAction extends ActionSupport implements Preparable{
 		}
 		
 		return searchManagers();
-	}
-	
-	public String getPage() {
-		return page;
-	}
-	
-	public void setPage(String page) {
-		this.page = page;
 	}
 	
 	public Manager getManagerSearch() {
